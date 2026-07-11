@@ -7,5 +7,7 @@
 			"path": "../InterruptVector.wiki"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "InterruptVector"
+	}
 }
