@@ -1,0 +1,13 @@
+# Speckit files (.specify/, .claude/) are intentionally NOT ignored --
+# they're part of the repo's process narrative. The one exception is
+# settings.local.json, Claude Code's own convention for machine-local
+# permissions/paths that were never meant to be shared.
+.claude/settings.local.json
+
+# env files (never commit secrets)
+.env*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db

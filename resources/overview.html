@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<title>Interrupt Vector — Design System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<script src="tw-theme.js"></script>
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>Babel.registerPreset('rc',{presets:[[Babel.availablePresets['react'],{runtime:'classic'}]]});</script>
+<script src="preview-shim.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body style="background-color:var(--color-void)">
+<div id="root" class="min-h-screen font-mono text-text-dim p-10">booting IV_CORE…</div>
+
+<script type="text/babel" data-presets="rc">
+(async function(){
+  const IV = window.resolveIVNamespace(['Button','Panel']) || await window.loadIVComponents([
+    'components/actions/Button.jsx','components/actions/IconButton.jsx',
+    'components/forms/Input.jsx','components/forms/Textarea.jsx','components/forms/Select.jsx',
+    'components/forms/Checkbox.jsx','components/forms/Switch.jsx','components/forms/SegmentedControl.jsx',
+    'components/surfaces/Panel.jsx','components/surfaces/Badge.jsx','components/surfaces/Tabs.jsx',
+  ]);
+  const {Button,IconButton,Input,Textarea,Select,Checkbox,Switch,SegmentedControl,Panel,Badge,Tabs}=IV;
+  const Ico=({n})=><i data-lucide={n}></i>;
+
+  const SectionLabel=({children,id})=> (
+    <div className="flex items-center gap-3 mb-5">
+      <span className="font-display font-semibold uppercase tracking-[0.2em] text-xs text-text-mid">{children}</span>
+      <span className="flex-1 border-t border-line"></span>
+      <span className="font-mono text-[10px] text-text-dim">{id}</span>
+    </div>
+  );
+  const Swatch=({c,name,hex,glow})=> (
+    <div className="flex flex-col gap-2">
+      <div className={"h-16 rounded-[3px] "+c+(glow?" "+glow:"")}></div>
+      <div className="flex items-baseline justify-between">
+        <span className="font-display font-semibold uppercase tracking-[0.12em] text-[11px] text-text">{name}</span>
+        <span className="font-mono text-[10px] text-text-dim">{hex}</span>
+      </div>
+    </div>
+  );
+
+  function App(){
+    const [chk,setChk]=React.useState(true),[sw,setSw]=React.useState(true),[sw2,setSw2]=React.useState(false),[seg,setSeg]=React.useState('ffa'),[tab,setTab]=React.useState('program');
+    React.useEffect(()=>{window.lucide&&window.lucide.createIcons();});
+    return (
+      <div className="max-w-5xl mx-auto">
+        {/* Masthead */}
+        <header className="relative overflow-hidden rounded-lg border border-line bg-base mb-10" style={{backgroundImage:'var(--bg-grid)'}}>
+          <div className="absolute inset-0" style={{background:'radial-gradient(120% 120% at 15% 0%, transparent 40%, var(--color-void) 100%)'}}></div>
+          <div className="relative px-10 py-12">
+            <div className="flex items-center gap-2 mb-5">
+              <Badge signal="green" pulse>System Online</Badge>
+              <span className="font-mono text-[11px] text-text-dim">v1.0 · TAILWIND V4</span>
+            </div>
+            <h1 className="font-display font-bold text-text tracking-tight" style={{fontSize:'clamp(2rem,5vw,3.25rem)',lineHeight:1.02}}>Interrupt Vector</h1>
+            <p className="font-mono text-sm text-text-mid mt-3 max-w-xl leading-relaxed"><span className="text-green">&gt;</span> Design system for a web-based tank-programming battle game. Neon phosphor on a warm-charcoal void.</p>
+            <div className="flex flex-wrap gap-2 mt-7">
+              <Button signal="green" icon={<Ico n="play"/>}>Deploy</Button>
+              <Button signal="cyan" variant="outline" icon={<Ico n="cpu"/>}>Program</Button>
+              <Button signal="amber" variant="ghost">Records</Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Colors */}
+        <section className="mb-12">
+          <SectionLabel id="0x01">Signals</SectionLabel>
+          <div className="grid grid-cols-4 gap-3 mb-4">
+            <Swatch c="bg-cyan" glow="shadow-glow-cyan" name="Cyan" hex="#35E9E1"/>
+            <Swatch c="bg-green" glow="shadow-glow-green" name="Green" hex="#4DF08A"/>
+            <Swatch c="bg-amber" glow="shadow-glow-amber" name="Amber" hex="#FFB627"/>
+            <Swatch c="bg-red" glow="shadow-glow-red" name="Red" hex="#FF4D3D"/>
+          </div>
+          <div className="grid grid-cols-5 gap-3">
+            <Swatch c="bg-void border border-line" name="Void" hex="#0B0A08"/>
+            <Swatch c="bg-base border border-line" name="Base" hex="#12100C"/>
+            <Swatch c="bg-panel border border-line" name="Panel" hex="#1A1712"/>
+            <Swatch c="bg-well border border-line" name="Well" hex="#221D16"/>
+            <Swatch c="bg-elev border border-line" name="Elev" hex="#2B251C"/>
+          </div>
+        </section>
+
+        {/* Type */}
+        <section className="mb-12">
+          <SectionLabel id="0x02">Type</SectionLabel>
+          <div className="grid grid-cols-2 gap-4">
+            <Panel title="Display · Space Grotesk" id="ui">
+              <div className="flex flex-col gap-3">
+                <span className="font-display font-bold text-text" style={{fontSize:'2rem',lineHeight:1.1}}>Select Loadout</span>
+                <span className="font-display font-semibold uppercase tracking-[0.14em] text-sm text-cyan">Armor / Heat / Scan</span>
+                <span className="font-display text-body text-text-mid">Body copy in a clean technical grotesk.</span>
+              </div>
+            </Panel>
+            <Panel title="Mono · JetBrains Mono" id="data">
+              <div className="flex flex-col gap-3 font-mono">
+                <span className="text-body text-text"><span className="text-green">&gt;</span> READY. Awaiting upload.</span>
+                <span className="text-sm text-text-mid">scan(enemy) <span className="text-amber">-&gt;</span> fire(main)</span>
+                <span className="text-data font-medium text-cyan tnum">87.4<span className="text-sm text-text-dim">%</span></span>
+              </div>
+            </Panel>
+          </div>
+        </section>
+
+        {/* Actions */}
+        <section className="mb-12">
+          <SectionLabel id="0x03">Actions</SectionLabel>
+          <Panel title="Buttons & Controls" id="act">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Button signal="green">Deploy</Button>
+              <Button signal="cyan" variant="outline">Inspect</Button>
+              <Button signal="amber" variant="ghost">Abort</Button>
+              <Button signal="red" variant="outline">Purge</Button>
+              <Button signal="cyan" disabled>Locked</Button>
+            </div>
+            <div className="flex flex-wrap gap-2 items-center">
+              <Button signal="green" size="sm">Small</Button>
+              <Button signal="green" size="lg">Large</Button>
+              <span className="w-px h-6 bg-line mx-1"></span>
+              <IconButton label="run" signal="green"><Ico n="play"/></IconButton>
+              <IconButton label="grid" active signal="cyan"><Ico n="grid-3x3"/></IconButton>
+              <IconButton label="warn" signal="amber"><Ico n="triangle-alert"/></IconButton>
+              <IconButton label="crit" signal="red"><Ico n="crosshair"/></IconButton>
+            </div>
+          </Panel>
+        </section>
+
+        {/* Forms */}
+        <section className="mb-12">
+          <SectionLabel id="0x04">Forms</SectionLabel>
+          <div className="grid grid-cols-2 gap-4">
+            <Panel title="Fields" id="frm">
+              <div className="flex flex-col gap-3">
+                <Input label="Callsign" defaultValue="RAZORBACK"/>
+                <Input label="Port" error="Port 8080 in use" defaultValue="8080"/>
+                <Select label="Chassis" options={['Skirmisher','Bulwark','Phantom']}/>
+              </div>
+            </Panel>
+            <Panel title="Choices" id="opt">
+              <div className="flex flex-col gap-4">
+                <Textarea label="Routine" rows={2} defaultValue={'scan(enemy)\nif range < 40: fire(main)'}/>
+                <SegmentedControl options={[{value:'1v1',label:'Duel'},{value:'ffa',label:'FFA'},{value:'co',label:'Co-op'}]} value={seg} onChange={setSeg}/>
+                <div className="flex flex-col gap-2">
+                  <Checkbox checked={chk} onChange={setChk} label="Ranked match"/>
+                  <div className="flex items-center gap-3">
+                    <Switch checked={sw} onChange={setSw} signal="cyan"/>
+                    <Switch checked={sw2} onChange={setSw2} signal="amber"/>
+                    <span className="font-mono text-xs text-text-dim">shields · aggression</span>
+                  </div>
+                </div>
+              </div>
+            </Panel>
+          </div>
+        </section>
+
+        {/* Surfaces */}
+        <section className="mb-12">
+          <SectionLabel id="0x05">Surfaces</SectionLabel>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <Panel title="Chassis" id="0x04" signal="cyan">
+              <div className="flex flex-wrap gap-2">
+                <Badge signal="green" pulse>Online</Badge>
+                <Badge signal="amber">Enemy</Badge>
+                <Badge signal="red" variant="ghost">Fault</Badge>
+                <Badge signal="cyan" variant="solid">Sys</Badge>
+                <Badge signal="green" variant="outline">Armed</Badge>
+              </div>
+            </Panel>
+            <Panel title="Threat" id="live" signal="amber" live right={<span>ENGAGED</span>}>
+              <p className="font-mono text-sm text-text-mid leading-relaxed"><span className="text-amber">&gt;</span> Enemy contact, bearing 040.<br/><span className="text-amber">&gt;</span> Range 38m and closing.</p>
+            </Panel>
+          </div>
+          <Panel title="Console" id="ui">
+            <Tabs tabs={[{value:'program',label:'Program'},{value:'loadout',label:'Loadout'},{value:'log',label:'Log',count:12}]} value={tab} onChange={setTab}/>
+            <div className="pt-3 font-mono text-sm text-text-mid">active tab: <span className="text-cyan">{tab}</span></div>
+          </Panel>
+        </section>
+
+        <footer className="border-t border-line pt-5 pb-10 flex items-center justify-between font-mono text-[11px] text-text-dim">
+          <span>IV_CORE · DESIGN SYSTEM v1.0</span>
+          <span>© 1989 / 2026 · INTERRUPT VECTOR</span>
+        </footer>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+})();
+</script>
+<script>Babel.transformScriptTags();</script>
+</body></html>
