@@ -14,3 +14,9 @@ follows [Keep a Changelog](https://keepachangelog.com/).
   fixed scripted AI opponent (no multiplayer/ranking/auth yet).
 - Added README.md, CHANGELOG.md, and status.md.
 - Added a design-system reference (`resources/overview.html`).
+- Scaffolded the Next.js app per the constitution's Technology
+  Constraints: App Router, TypeScript strict, Tailwind CSS, `src/`
+  layout, `npm`. Added Zod (env validation) and Drizzle ORM against
+  Postgres (empty placeholder schema, driver choice not yet an ADR).
+  Wired up Vitest (unit) and Playwright (e2e) with smoke tests, and
+  `.env.example` / `.env.local` for `DATABASE_URL`.

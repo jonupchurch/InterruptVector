@@ -41,5 +41,21 @@ governed by the [project constitution](.specify/memory/constitution.md).
 
 ## Running this project
 
-Not runnable yet — no application code exists. This section will cover
-setup and `npm run dev` once scaffolding begins.
+The app is scaffolded (Next.js App Router, TypeScript strict, Tailwind
+CSS, Zod, Drizzle ORM, Vitest, Playwright) but has no product features
+yet — this is infrastructure only, per the constitution's stated
+exception for initial scaffolding.
+
+```bash
+npm install
+cp .env.example .env.local   # fill in DATABASE_URL
+npm run dev                  # http://localhost:3000
+npm run typecheck
+npm run lint
+npm run test                 # vitest
+npm run test:e2e             # playwright
+npm run build
+```
+
+Drizzle config lives in `drizzle.config.ts` / `src/db/`; the schema is
+currently empty pending the data-model ADR (see `status.md`).
