@@ -85,15 +85,15 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 ### Tests for User Story 2
 
-- [ ] T022 [P] [US2] Integration test: `POST /api/programs` surfaces a syntax error without discarding the client's unsaved text in `tests/integration/programs.test.ts`
+- [X] T022 [P] [US2] Integration test: `POST /api/programs` surfaces a syntax error without discarding the client's unsaved text in `tests/integration/programs.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Implement `GET`/`POST /api/programs` and `PATCH /api/programs/:id` route handlers in `src/app/api/programs/route.ts` and `src/app/api/programs/[id]/route.ts`
-- [ ] T024 [US2] Integrate Monaco editor in `src/app/code/page.tsx` per The Socket wireframe
-- [ ] T025 [US2] Build the saved-program list/select UI in `src/components/code/ProgramList.tsx`
-- [ ] T026 [US2] Implement client-side and server-side JS syntax validation before save
-- [ ] T027 [US2] Wire the save/reload flow end-to-end on the Coding page
+- [X] T023 [US2] Implement `GET`/`POST /api/programs` and `PATCH /api/programs/:id` route handlers in `src/app/api/programs/route.ts` and `src/app/api/programs/[id]/route.ts`
+- [X] T024 [US2] Integrate Monaco editor in `src/app/code/page.tsx` per The Socket wireframe
+- [X] T025 [US2] Build the saved-program list/select UI — inline within `src/components/code/CodeEditorPage.tsx` rather than a separate `ProgramList.tsx` (tight coupling with editor/selection state made one component simpler; not a separate file as originally sketched)
+- [X] T026 [US2] Implement client-side and server-side JS syntax validation before save — server-side via `src/lib/syntax-check.ts` (parses via `new Function`, never executes); client never clears unsaved text on a save error
+- [X] T027 [US2] Wire the save/reload flow end-to-end on the Coding page — verified with a Playwright smoke check against Monaco specifically (editor mounts, save succeeds, zero console errors)
 
 **Checkpoint**: User Stories 1 and 2 both independently functional.
 

@@ -27,3 +27,14 @@ roadmap.
 - Whether replay-log storage should move from Postgres JSONB to object
   storage (Vercel Blob) — deferred until match volume is a measured
   concern, not a hypothetical one (see `docs/adr/0003-replay-storage-shape.md`).
+
+## Noted during implementation
+
+- Integration tests currently hit the real local Postgres instance
+  directly (no separate test database, no transaction rollback), so
+  running them leaves real rows behind in the dev DB (observed while
+  smoke-testing the Coding page — an integration-test-created "Valid
+  Program" row was already selected by default on page load). Not
+  breaking anything today, but worth a real fix (dedicated test DB, or
+  wrapping each test in a rolled-back transaction) before this grows
+  into noisier dev-data drift.
