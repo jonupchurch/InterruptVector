@@ -61,17 +61,17 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Integration test: `POST /api/builds` rejects a build exceeding Chassis Weight Capacity in `tests/integration/builds.test.ts`
-- [ ] T015 [P] [US1] Integration test: `POST /api/builds` rejects a part tier above the profile's current unlock level in `tests/integration/builds.test.ts`
-- [ ] T016 [P] [US1] Unit tests for `src/lib/unlocks.ts` and `src/lib/weight-validation.ts` in `tests/unit/parts-catalog.test.ts`
+- [X] T014 [P] [US1] Integration test: `POST /api/builds` rejects a build exceeding Chassis Weight Capacity in `tests/integration/builds.test.ts`
+- [X] T015 [P] [US1] Integration test: `POST /api/builds` rejects a part tier above the profile's current unlock level in `tests/integration/builds.test.ts`
+- [X] T016 [P] [US1] Unit tests for `src/lib/unlocks.ts` and `src/lib/weight-validation.ts` — done as part of T007/T008 (colocated `src/lib/unlocks.test.ts`, `src/lib/weight-validation.test.ts`), plus `src/lib/derived-stats.test.ts` for the Speed/Total Weight display
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement `GET`/`POST /api/builds` route handlers in `src/app/api/builds/route.ts`
-- [ ] T018 [US1] Implement `PATCH /api/builds/:id` route handler in `src/app/api/builds/[id]/route.ts`
-- [ ] T019 [US1] Build the Tank Builder page (`src/app/builder/page.tsx`) per The Bay wireframe, restricted to unlocked tiers
-- [ ] T020 [US1] Build per-system part-picker components (showing derived stats, e.g. Speed, Total Weight) in `src/components/builder/`
-- [ ] T021 [US1] Wire the save/reload flow end-to-end on the Tank Builder page
+- [X] T017 [US1] Implement `GET`/`POST /api/builds` route handlers in `src/app/api/builds/route.ts`
+- [X] T018 [US1] Implement `PATCH /api/builds/:id` route handler in `src/app/api/builds/[id]/route.ts`
+- [X] T019 [US1] Build the Tank Builder page (`src/app/builder/page.tsx`) per The Bay wireframe, restricted to unlocked tiers
+- [X] T020 [US1] Build per-system part-picker components (showing derived stats, e.g. Speed, Total Weight) in `src/components/builder/`
+- [X] T021 [US1] Wire the save/reload flow end-to-end on the Tank Builder page — verified with a Playwright smoke check (page loads, save succeeds, no console errors) in addition to the automated tests above
 
 **Checkpoint**: User Story 1 fully functional and independently testable.
 
