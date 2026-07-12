@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens transcribed from resources/Design System.html and the
+ * bundled page wireframes (exact hex values pulled from both) --
+ * "neon phosphor on a warm-charcoal void" (Principle III: distinctive
+ * visual identity, not default Tailwind).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-void: #0b0a08;
+  --color-base: #12100c;
+  --color-panel: #1a1712;
+  --color-well: #221d16;
+  --color-elev: #2b251c;
+  --color-line: #382f22;
+
+  --color-text: #ece4d3;
+  --color-text-mid: #a69c8c;
+  --color-text-dim: #6f6858;
+
+  --color-cyan: #35e9e1;
+  --color-green: #4df08a;
+  --color-amber: #ffb627;
+  --color-red: #ff4d3d;
+  --color-red-glow: #ff8a80;
+  --color-red-well: #2a1215;
+  --color-red-line: #5c2b2e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-void: var(--color-void);
+  --color-base: var(--color-base);
+  --color-panel: var(--color-panel);
+  --color-well: var(--color-well);
+  --color-elev: var(--color-elev);
+  --color-line: var(--color-line);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-text: var(--color-text);
+  --color-text-mid: var(--color-text-mid);
+  --color-text-dim: var(--color-text-dim);
+
+  --color-cyan: var(--color-cyan);
+  --color-green: var(--color-green);
+  --color-amber: var(--color-amber);
+  --color-red: var(--color-red);
+  --color-red-glow: var(--color-red-glow);
+  --color-red-well: var(--color-red-well);
+  --color-red-line: var(--color-red-line);
+
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-void);
+  color: var(--color-text);
 }

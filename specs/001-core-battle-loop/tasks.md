@@ -24,11 +24,11 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 **Purpose**: Add what this feature needs on top of the already-scaffolded Next.js/TypeScript/Tailwind/Zod/Drizzle/Vitest/Playwright project.
 
-- [ ] T001 Add `quickjs-emscripten` and `@monaco-editor/react` to `package.json`, run `npm install`
-- [ ] T002 [P] Create `src/engine/`, `src/engine/sandbox/`, `src/engine/opponents/` directory structure per plan.md
-- [ ] T003 [P] Create `docs/future-work.md` (constitution requires out-of-scope ideas logged here, not left implicit)
-- [ ] T004 [P] Add `tests/unit/`, `tests/integration/`, `tests/adversarial/`, `tests/determinism/` directories with a Vitest config update so all four are discovered
-- [ ] T005 Verify local Postgres connection and existing Drizzle config (`drizzle.config.ts`, `src/db/index.ts`) still resolve before schema work begins
+- [X] T001 Add `quickjs-emscripten` and `@monaco-editor/react` to `package.json`, run `npm install`
+- [X] T002 [P] Create `src/engine/`, `src/engine/sandbox/`, `src/engine/opponents/` directory structure per plan.md
+- [X] T003 [P] Create `docs/future-work.md` (constitution requires out-of-scope ideas logged here, not left implicit)
+- [X] T004 [P] Add `tests/integration/`, `tests/adversarial/`, `tests/determinism/` directories (unit tests are colocated next to their source files, e.g. `src/lib/unlocks.test.ts`, matching the convention already established by `src/env.test.ts` — no `tests/unit/` directory; Vitest's default `include` already discovers both patterns, no config change needed)
+- [X] T005 Verify local Postgres connection and existing Drizzle config (`drizzle.config.ts`, `src/db/index.ts`) still resolve before schema work begins
 
 **Checkpoint**: Dependencies and directory structure in place.
 
@@ -40,14 +40,14 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 **⚠️ CRITICAL**: Blocks all user stories below.
 
-- [ ] T006 Transcribe the fixed parts catalog (Chassis 10 tiers, Weapon 10 tiers, Sensors/Mobility/Power 5 tiers each, from the wiki's 1.1.1-1.1.5 pages) into `src/lib/parts-catalog.ts`
-- [ ] T007 [P] Implement unlock-rule helpers (Chassis/Weapon tier ≤ rank; Sensors/Mobility/Power tier ≤ ceil(rank/2)) in `src/lib/unlocks.ts`
-- [ ] T008 [P] Implement weight-capacity validation (Mobility + Power + Weapon weight ≤ Chassis Weight Capacity, spec FR-003) in `src/lib/weight-validation.ts`
-- [ ] T009 Define Drizzle schema for all 6 entities (Pilot Profile, Tank Build, Pilot Code Program, Boss/Practice Challenger, Battle, Battle Log) in `src/db/schema.ts` per data-model.md
-- [ ] T010 Generate and run the initial migration (`npm run db:generate`, `npm run db:migrate`)
-- [ ] T011 Seed the single implicit Pilot Profile row (rank 1) per spec Assumptions
-- [ ] T012 [P] Implement shared design-system tokens/theme (colors, type, spacing) in `src/components/` per the Design System wireframe and Principle III
-- [ ] T013 [P] Implement the shared page shell/navigation across the six MVP pages in `src/app/layout.tsx`
+- [X] T006 Transcribe the fixed parts catalog (Chassis 10 tiers, Weapon 10 tiers, Sensors/Mobility/Power 5 tiers each, from the wiki's 1.1.1-1.1.5 pages) into `src/lib/parts-catalog.ts`
+- [X] T007 [P] Implement unlock-rule helpers (Chassis/Weapon tier ≤ rank; Sensors/Mobility/Power tier ≤ ceil(rank/2)) in `src/lib/unlocks.ts` (tests: `src/lib/unlocks.test.ts`)
+- [X] T008 [P] Implement weight-capacity validation (Mobility + Power + Weapon weight ≤ Chassis Weight Capacity, spec FR-003) in `src/lib/weight-validation.ts` (tests: `src/lib/weight-validation.test.ts`)
+- [X] T009 Define Drizzle schema for all 6 entities (Pilot Profile, Tank Build, Pilot Code Program, Boss/Practice Challenger, Battle, Battle Log) in `src/db/schema.ts` per data-model.md
+- [X] T010 Generate and run the initial migration (`npm run db:generate`, `npm run db:migrate`) — also fixed `drizzle.config.ts` to load `.env.local` explicitly (drizzle-kit runs standalone, outside Next.js's automatic env loading)
+- [X] T011 Seed the single implicit Pilot Profile row (rank 1) per spec Assumptions — `scripts/seed.ts`, idempotent, `npm run db:seed`
+- [X] T012 [P] Implement shared design-system tokens/theme (colors, type, spacing) in `src/app/globals.css` per the Design System wireframe and Principle III (hex values transcribed directly from `resources/Design System.html` and the bundled page wireframes)
+- [X] T013 [P] Implement the shared page shell/navigation across the six MVP pages in `src/app/layout.tsx` and `src/components/Nav.tsx`
 
 **Checkpoint**: Foundation ready — user stories can now proceed.
 
