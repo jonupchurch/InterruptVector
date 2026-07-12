@@ -13,10 +13,12 @@ type Direction =
 
 interface TankStatus {
   hp: number;
+  maxHp: number;
   heading: Direction;
   coordinates: { x: number; y: number };
   moving: boolean;
   powerReserves: number;
+  maxPowerReserves: number;
   cooldowns: {
     fire: number;         // ticks remaining; 0 = ready
     sensors: number;

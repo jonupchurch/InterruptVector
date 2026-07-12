@@ -85,10 +85,12 @@ export function installApi(context: QuickJSContext, ctx: ApiContext): QuickJSHan
     const s = ctx.self;
     return toHandle(context, {
       hp: s.hp,
+      maxHp: s.maxHp,
       heading: directionIndexToCode(s.headingIndex),
       coordinates: { x: s.position.x, y: s.position.y },
       moving: isBusy(s.moveQueue),
       powerReserves: s.power.reserves,
+      maxPowerReserves: s.power.maxReserves,
       cooldowns: {
         fire: s.fireQueue.ticksRemaining,
         sensors: s.sensorsCooldownTicks,
