@@ -8,7 +8,7 @@ import { integer, jsonb, pgEnum, pgTable, serial, text, timestamp } from "drizzl
  */
 
 export const opponentKind = pgEnum("opponent_kind", ["boss", "challenger"]);
-export const battleStatus = pgEnum("battle_status", ["queued", "simulating", "complete"]);
+export const battleStatus = pgEnum("battle_status", ["queued", "simulating", "complete", "failed"]);
 export const battleOutcome = pgEnum("battle_outcome", ["win", "loss"]);
 
 export const pilotProfiles = pgTable("pilot_profiles", {
@@ -82,6 +82,8 @@ export const battles = pgTable("battles", {
   status: battleStatus("status").notNull().default("queued"),
   outcome: battleOutcome("outcome"),
   finalTick: integer("final_tick"),
+  /** Set only when status = "failed" -- an internal error, not a normal loss. Never a security-sensitive value (Principle II), but not shown to the player as-is either; see the Battles UI. */
+  errorMessage: text("error_message"),
   submittedAt: timestamp("submitted_at").notNull().defaultNow(),
   simulatedAt: timestamp("simulated_at"),
 });

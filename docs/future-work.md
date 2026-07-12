@@ -32,9 +32,19 @@ roadmap.
 
 - Integration tests currently hit the real local Postgres instance
   directly (no separate test database, no transaction rollback), so
-  running them leaves real rows behind in the dev DB (observed while
-  smoke-testing the Coding page — an integration-test-created "Valid
-  Program" row was already selected by default on page load). Not
-  breaking anything today, but worth a real fix (dedicated test DB, or
-  wrapping each test in a rolled-back transaction) before this grows
-  into noisier dev-data drift.
+  running them leaves real rows behind in the dev DB. This directly
+  caused a real bug: an old test fixture ("Valid Program") saved
+  before save-time pilotCode-definition validation existed got picked
+  up by a live smoke test and made a real battle fail (correctly, now
+  — see below). Save-time validation closes the immediate hole, but
+  the underlying hygiene issue remains — worth a real fix (dedicated
+  test DB, or wrapping each test in a rolled-back transaction) before
+  this grows into noisier dev-data drift.
+- The queued battle worker (`src/engine/worker.ts`) is triggered via
+  Next's `after()`, which reliably keeps the function alive past the
+  HTTP response in a real request — but it's still not a *durable*
+  queue: a server restart mid-simulation loses that battle's progress
+  (it stays stuck at `simulating` forever, same failure mode a crash
+  produces). Fine for local dev; a real deployment should move this to
+  something like Vercel Queues before matches are expected to survive
+  restarts.

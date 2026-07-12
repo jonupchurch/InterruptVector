@@ -5,6 +5,7 @@ import { pilotCodePrograms } from "@/db/schema";
 import { programInputSchema } from "@/lib/program-schema";
 import { getCurrentPilotProfile } from "@/lib/pilot-profile";
 import { checkPilotCodeSyntax } from "@/lib/syntax-check";
+import { verifyPilotCodeIsDefined } from "@/engine/sandbox/interpreter";
 
 export async function GET() {
   const profile = await getCurrentPilotProfile();
@@ -26,6 +27,14 @@ export async function POST(request: Request) {
   if (!syntaxResult.valid) {
     return NextResponse.json(
       { errors: [{ field: "sourceCode", message: syntaxResult.message }] },
+      { status: 400 },
+    );
+  }
+
+  const definitionResult = await verifyPilotCodeIsDefined(parsed.data.sourceCode);
+  if (!definitionResult.valid) {
+    return NextResponse.json(
+      { errors: [{ field: "sourceCode", message: definitionResult.message }] },
       { status: 400 },
     );
   }

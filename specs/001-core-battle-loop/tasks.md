@@ -107,52 +107,52 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 ### Sandbox & engine core
 
-- [ ] T028 [US3] Implement the WASM interpreter wrapper (instantiate/teardown `quickjs-emscripten`) in `src/engine/sandbox/interpreter.ts`
-- [ ] T029 [US3] Implement `api` host-function bindings (`self`, `canMove`, `moveCost`, `sensors`, `rotateTank`, `rotateTurret`, `rotateTurretToXY`, `moveForward`, `moveBackward`, `fire`, `log`) per `contracts/pilot-code-api.md` in `src/engine/sandbox/api-bindings.ts`
-- [ ] T030 [US3] Implement the step-count execution budget and interrupt handling (spec FR-012) in `src/engine/sandbox/step-budget.ts`
-- [ ] T031 [US3] Implement the WASM memory ceiling and its three-consecutive-violations forfeit handling (spec FR-013) in `src/engine/sandbox/memory-guard.ts`
-- [ ] T032 [US3] Implement the per-system action queue (movement/turret/fire/sensors tracked independently, non-blocking, spec FR-011) in `src/engine/queue.ts`
-- [ ] T033 [US3] Implement grid/footprint/facing resolution (8-direction quantization, fixed 45°/5-tick turret rate, `rotateTurretToXY` free-remainder rule, spec FR-020) in `src/engine/grid.ts`
-- [ ] T034 [US3] Implement terrain generation (7 types, mirrored across the LL/UR diagonal, spec FR-021/FR-022) in `src/engine/terrain.ts`
-- [ ] T035 [US3] Implement the damage formula (`max(1, Base − max(0, Armor − AP))`, Gauss Cannon armor-ignore exception, spec FR-019) in `src/engine/damage.ts`
-- [ ] T036 [US3] Implement Power Reserves/Output/overload resolution, including `sensors()`'s 1-Reserves cost and error return (spec FR-015) in `src/engine/power.ts`
-- [ ] T037 [US3] Implement the deterministic tick loop (`pilotCode(api)` once per tick per tank; applies queued actions; resolves movement/damage/power) in `src/engine/simulate.ts`
-- [ ] T038 [US3] Implement the match tick-cap/timeout rule (3,000-tick default, loss on timeout regardless of relative HP, spec FR-018) in `src/engine/simulate.ts`
-- [ ] T039 [US3] Implement tick-by-tick replay-log recording (state, `api` calls, damage events, `log()` messages tagged `pilot`/`system`, spec FR-023) in `src/engine/replay-log.ts`
-- [ ] T040 [US3] Implement uncaught pilot-code exception handling (partial-tick effects stand, error surfaces on the log channel, spec Edge Cases) in `src/engine/sandbox/error-handling.ts`
+- [X] T028 [US3] Implement the WASM interpreter wrapper (instantiate/teardown `quickjs-emscripten`) in `src/engine/sandbox/interpreter.ts` — uses `newQuickJSWASMModule()` (a fully isolated module per sandbox) rather than the shared `getQuickJS()` singleton, so one crashed/interrupted sandbox can't corrupt another's WASM state (Principle II)
+- [X] T029 [US3] Implement `api` host-function bindings (`self`, `canMove`, `moveCost`, `sensors`, `rotateTank`, `rotateTurret`, `rotateTurretToXY`, `moveForward`, `moveBackward`, `fire`, `log`) per `contracts/pilot-code-api.md` in `src/engine/sandbox/api-bindings.ts`
+- [X] T030 [US3] Implement the step-count execution budget and interrupt handling (spec FR-012) in `src/engine/sandbox/step-budget.ts`
+- [X] T031 [US3] Implement the WASM memory ceiling and its three-consecutive-violations forfeit handling (spec FR-013) in `src/engine/sandbox/memory-guard.ts`
+- [X] T032 [US3] Implement the per-system action queue (movement/turret/fire/sensors tracked independently, non-blocking, spec FR-011) in `src/engine/queue.ts` — tracks the in-flight action itself (not just a countdown) so its effect can be applied when it *completes*, not when requested; queue depth capped at 1
+- [X] T033 [US3] Implement grid/footprint/facing resolution (8-direction quantization, fixed 45°/5-tick turret rate, `rotateTurretToXY` free-remainder rule, spec FR-020) in `src/engine/grid.ts`
+- [X] T034 [US3] Implement terrain generation (7 types, mirrored across the LL/UR diagonal, spec FR-021/FR-022) in `src/engine/terrain.ts` — deterministic via `src/engine/rng.ts` (seeded mulberry32, since `Math.random()` can't satisfy Principle V)
+- [X] T035 [US3] Implement the damage formula (`max(1, Base − max(0, Armor − AP))`, Gauss Cannon armor-ignore exception, spec FR-019) in `src/engine/damage.ts`
+- [X] T036 [US3] Implement Power Reserves/Output/overload resolution, including `sensors()`'s 1-Reserves cost and error return (spec FR-015) in `src/engine/power.ts`
+- [X] T037 [US3] Implement the deterministic tick loop (`pilotCode(api)` once per tick per tank; applies queued actions; resolves movement/damage/power) in `src/engine/simulate.ts`
+- [X] T038 [US3] Implement the match tick-cap/timeout rule (3,000-tick default, loss on timeout regardless of relative HP, spec FR-018) in `src/engine/simulate.ts`
+- [X] T039 [US3] Implement tick-by-tick replay-log recording (state, `api` calls, damage events, `log()` messages tagged `pilot`/`system`, spec FR-023) in `src/engine/replay-log.ts` — damage is visible via hp deltas between tick snapshots rather than a separate discrete damage-event list; a documented simplification, not a spec violation
+- [X] T040 [US3] Implement uncaught pilot-code exception handling (partial-tick effects stand, error surfaces on the log channel, spec Edge Cases) in `src/engine/sandbox/error-handling.ts`
 
 ### Battle queue & progression
 
-- [ ] T041 [US3] Implement `POST /api/battles` (snapshots build+program per data-model.md, enqueues, returns `queued` status) in `src/app/api/battles/route.ts`
-- [ ] T042 [US3] Implement the queued/background simulation worker that picks up `queued` Battles and runs `src/engine/simulate.ts` in `src/engine/worker.ts`
-- [ ] T043 [US3] Implement `GET /api/battles/:id` status/outcome polling in `src/app/api/battles/[id]/route.ts`
-- [ ] T044 [US3] Implement rank-advancement on a boss win, without re-granting on a repeat win (spec FR-024, FR-028) in `src/engine/progression.ts`
+- [X] T041 [US3] Implement `POST /api/battles` (snapshots build+program per data-model.md, enqueues, returns `queued` status) in `src/app/api/battles/route.ts`
+- [X] T042 [US3] Implement the queued/background simulation worker that picks up `queued` Battles and runs `src/engine/simulate.ts` in `src/engine/worker.ts` — triggered via `src/lib/schedule-after-response.ts` (wraps Next's `after()`, the documented way to keep a function alive past the response; falls back to a plain async call outside a request scope so route handlers stay directly testable). Any unexpected error marks the battle `failed` (new status + `errorMessage` column) instead of leaving it stuck at `simulating` forever — a real bug caught via a Playwright smoke test against a bad program fixture, not something the plan anticipated
+- [X] T043 [US3] Implement `GET /api/battles/:id` status/outcome polling in `src/app/api/battles/[id]/route.ts`
+- [X] T044 [US3] Implement rank-advancement on a boss win, without re-granting on a repeat win (spec FR-024, FR-028) in `src/engine/progression.ts`
 
 ### Opponent content (rank 1 only — see Complexity Tracking in plan.md for why the rest is sequenced later)
 
-- [ ] T045 [US3] Author the rank-1 boss's loadout and pilot code in `src/engine/opponents/rank-1-boss.ts`
-- [ ] T046 [P] [US3] Author rank-1 practice challenger 1 in `src/engine/opponents/rank-1-challenger-1.ts`
-- [ ] T047 [P] [US3] Author rank-1 practice challenger 2 in `src/engine/opponents/rank-1-challenger-2.ts`
-- [ ] T048 [P] [US3] Author rank-1 practice challenger 3 in `src/engine/opponents/rank-1-challenger-3.ts`
-- [ ] T049 [US3] Seed the 4 rank-1 opponents into the Boss/Practice Challenger table
+- [X] T045 [US3] Author the rank-1 boss's loadout and pilot code in `src/engine/opponents/rank-1-boss.ts` ("The Watchman")
+- [X] T046 [P] [US3] Author rank-1 practice challenger 1 in `src/engine/opponents/rank-1-challenger-1.ts` ("The Drone")
+- [X] T047 [P] [US3] Author rank-1 practice challenger 2 in `src/engine/opponents/rank-1-challenger-2.ts` ("The Sentry")
+- [X] T048 [P] [US3] Author rank-1 practice challenger 3 in `src/engine/opponents/rank-1-challenger-3.ts` ("The Rammer")
+- [X] T049 [US3] Seed the 4 rank-1 opponents into the Boss/Practice Challenger table — `scripts/seed.ts`; gear is tier 2 Chassis/Weapon + tier 1 Sensor/Mobility/Power (`unlockedTiersForRank(2)`), matching the wiki's "one tier ahead of whatever your enclave currently has" rule generalized across all five systems
 
 ### Battle browser UI
 
-- [ ] T050 [US3] Implement `GET /api/opponents` (opponents available at the player's current rank) in `src/app/api/opponents/route.ts`
-- [ ] T051 [US3] Build the Battle Browser page (`src/app/battles/page.tsx`) per the Battles wireframe — boss + challengers list, submit flow
-- [ ] T052 [US3] Wire build+program selection → battle submission → status polling on the Battle Browser page
+- [X] T050 [US3] Implement `GET /api/opponents` (opponents available at the player's current rank) in `src/app/api/opponents/route.ts`
+- [X] T051 [US3] Build the Battle Browser page (`src/app/battles/page.tsx`) per the Battles wireframe — boss + challengers list, submit flow
+- [X] T052 [US3] Wire build+program selection → battle submission → status polling on the Battle Browser page — verified with a real Playwright smoke run (submits an actual battle, waits for it to resolve through the live sandbox pipeline)
 
 ### Tests for User Story 3
 
-- [ ] T053 [P] [US3] Unit tests for the damage formula in `tests/unit/damage.test.ts`
-- [ ] T054 [P] [US3] Unit tests for grid/facing/turret-rotation rules in `tests/unit/grid.test.ts`
-- [ ] T055 [P] [US3] Unit tests for power/overload resolution in `tests/unit/power.test.ts`
-- [ ] T056 [US3] Integration test for the engine↔sandbox boundary (an `api` call actually changes tank state) in `tests/integration/engine-sandbox.test.ts`
-- [ ] T057 [US3] Integration test for the full queued-submission → simulate → complete lifecycle in `tests/integration/battle-lifecycle.test.ts`
-- [ ] T058 [P] [US3] Adversarial test: an infinite loop in pilot code is contained by the step-count budget in `tests/adversarial/infinite-loop.test.ts`
-- [ ] T059 [P] [US3] Adversarial test: a memory-exhaustion attempt is contained in `tests/adversarial/memory-exhaustion.test.ts`
-- [ ] T060 [P] [US3] Adversarial test: forbidden API access (filesystem/network) attempts fail in `tests/adversarial/forbidden-access.test.ts`
-- [ ] T061 [US3] Determinism test: identical build+program+seed produces a byte-identical tick log across repeated runs in `tests/determinism/replay-determinism.test.ts`
+- [X] T053 [P] [US3] Unit tests for the damage formula — colocated as `src/engine/damage.test.ts` (see the same colocation-over-`tests/unit/` note from Foundational)
+- [X] T054 [P] [US3] Unit tests for grid/facing/turret-rotation rules — `src/engine/grid.test.ts`. Caught and fixed a real bug: `bearingDegrees` had North/South inverted (an `atan2(dx, -dy)` sign error); the fire-resolution integration test below is what exposed it, since the isolated grid-math unit test's own fixture had been constructed with the same inverted sign and was self-consistently wrong
+- [X] T055 [P] [US3] Unit tests for power/overload resolution — `src/engine/power.test.ts`
+- [X] T056 [US3] Integration test for the engine↔sandbox boundary (an `api` call actually changes tank state) in `tests/integration/engine-sandbox.test.ts` — also caught the bearing bug above, plus a JSON-marshaling bug (`context.evalCode('{"hp":...}')` parses as a block statement, not an object literal, unless wrapped in parens)
+- [X] T057 [US3] Integration test for the full queued-submission → simulate → complete lifecycle in `tests/integration/battle-lifecycle.test.ts`
+- [X] T058 [P] [US3] Adversarial test: an infinite loop in pilot code is contained by the step-count budget in `tests/adversarial/infinite-loop.test.ts` — caught a real WASM disposal bug: the interpreter wasn't disposing the QuickJS result handle on the interrupted-execution path, which corrupted the runtime's GC state and crashed on a later `dispose()`
+- [X] T059 [P] [US3] Adversarial test: a memory-exhaustion attempt is contained in `tests/adversarial/memory-exhaustion.test.ts`
+- [X] T060 [P] [US3] Adversarial test: forbidden API access (filesystem/network) attempts fail in `tests/adversarial/forbidden-access.test.ts` — includes a constructor-chain sandbox-escape attempt, not just plain global lookups
+- [X] T061 [US3] Determinism test: identical build+program+seed produces a byte-identical tick log across repeated runs in `tests/determinism/replay-determinism.test.ts`
 
 **Checkpoint**: User Stories 1, 2, and 3 functional — a player can build, code, and fight rank 1 end-to-end.
 

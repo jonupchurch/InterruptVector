@@ -24,10 +24,31 @@ describe("POST /api/programs", () => {
     );
   });
 
-  it("accepts syntactically valid pilot code", async () => {
+  it("rejects syntactically valid JS that never defines pilotCode(api) -- this must be caught at save time, not first discovered mid-battle", async () => {
+    const res = await postPrograms({
+      name: "Missing pilotCode",
+      // Syntactically fine top-level code, but there's no `function
+      // pilotCode(api) { ... }` -- this exact shape once slipped
+      // through save-time validation and left a real battle stuck at
+      // "simulating" forever until the underlying bug was fixed.
+      sourceCode: "const bogeys = api.sensors(); if (bogeys.length > 0) { api.fire(); }",
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ field: "sourceCode" })]),
+    );
+  });
+
+  it("accepts a program that actually defines pilotCode(api)", async () => {
     const res = await postPrograms({
       name: "Valid Program",
-      sourceCode: "const bogeys = api.sensors(); if (bogeys.length > 0) { api.fire(); }",
+      sourceCode: `
+        function pilotCode(api) {
+          const bogeys = api.sensors();
+          if (bogeys !== -1 && bogeys.length > 0) { api.fire(); }
+        }
+      `,
     });
     expect(res.status).toBe(201);
     const body = await res.json();

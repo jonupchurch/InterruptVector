@@ -1,0 +1,462 @@
+{
+  "id": "f170742b-19fe-495a-bcc3-45ac32f009e4",
+  "prevId": "aa1f6c0b-faa2-47c0-be8e-1e9669d39c8f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.battle_logs": {
+      "name": "battle_logs",
+      "schema": "",
+      "columns": {
+        "battle_id": {
+          "name": "battle_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tick_log": {
+          "name": "tick_log",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "battle_logs_battle_id_battles_id_fk": {
+          "name": "battle_logs_battle_id_battles_id_fk",
+          "tableFrom": "battle_logs",
+          "tableTo": "battles",
+          "columnsFrom": [
+            "battle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.battles": {
+      "name": "battles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "pilot_profile_id": {
+          "name": "pilot_profile_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opponent_id": {
+          "name": "opponent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "build_snapshot": {
+          "name": "build_snapshot",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_source_snapshot": {
+          "name": "program_source_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seed": {
+          "name": "seed",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "battle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'queued'"
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "battle_outcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "final_tick": {
+          "name": "final_tick",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error_message": {
+          "name": "error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "simulated_at": {
+          "name": "simulated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "battles_pilot_profile_id_pilot_profiles_id_fk": {
+          "name": "battles_pilot_profile_id_pilot_profiles_id_fk",
+          "tableFrom": "battles",
+          "tableTo": "pilot_profiles",
+          "columnsFrom": [
+            "pilot_profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "battles_opponent_id_opponents_id_fk": {
+          "name": "battles_opponent_id_opponents_id_fk",
+          "tableFrom": "battles",
+          "tableTo": "opponents",
+          "columnsFrom": [
+            "opponent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.opponents": {
+      "name": "opponents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rank_tier": {
+          "name": "rank_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "opponent_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chassis_tier": {
+          "name": "chassis_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weapon_tier": {
+          "name": "weapon_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sensor_tier": {
+          "name": "sensor_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mobility_tier": {
+          "name": "mobility_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "power_tier": {
+          "name": "power_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "behavior_module": {
+          "name": "behavior_module",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pilot_code_programs": {
+      "name": "pilot_code_programs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "pilot_profile_id": {
+          "name": "pilot_profile_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_code": {
+          "name": "source_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pilot_code_programs_pilot_profile_id_pilot_profiles_id_fk": {
+          "name": "pilot_code_programs_pilot_profile_id_pilot_profiles_id_fk",
+          "tableFrom": "pilot_code_programs",
+          "tableTo": "pilot_profiles",
+          "columnsFrom": [
+            "pilot_profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pilot_profiles": {
+      "name": "pilot_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tank_builds": {
+      "name": "tank_builds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "pilot_profile_id": {
+          "name": "pilot_profile_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chassis_tier": {
+          "name": "chassis_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weapon_tier": {
+          "name": "weapon_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sensor_tier": {
+          "name": "sensor_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mobility_tier": {
+          "name": "mobility_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "power_tier": {
+          "name": "power_tier",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tank_builds_pilot_profile_id_pilot_profiles_id_fk": {
+          "name": "tank_builds_pilot_profile_id_pilot_profiles_id_fk",
+          "tableFrom": "tank_builds",
+          "tableTo": "pilot_profiles",
+          "columnsFrom": [
+            "pilot_profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.battle_outcome": {
+      "name": "battle_outcome",
+      "schema": "public",
+      "values": [
+        "win",
+        "loss"
+      ]
+    },
+    "public.battle_status": {
+      "name": "battle_status",
+      "schema": "public",
+      "values": [
+        "queued",
+        "simulating",
+        "complete",
+        "failed"
+      ]
+    },
+    "public.opponent_kind": {
+      "name": "opponent_kind",
+      "schema": "public",
+      "values": [
+        "boss",
+        "challenger"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
