@@ -1,15 +1,17 @@
 import { eq, lte } from "drizzle-orm";
 import { BattleSubmitForm } from "@/components/battles/BattleSubmitForm";
+import { BattleHistory } from "@/components/battles/BattleHistory";
 import { db } from "@/db";
-import { opponents, pilotCodePrograms, tankBuilds } from "@/db/schema";
+import { battles, opponents, pilotCodePrograms, tankBuilds } from "@/db/schema";
 import { getCurrentPilotProfile } from "@/lib/pilot-profile";
 
 export default async function BattlesPage() {
   const profile = await getCurrentPilotProfile();
-  const [builds, programs, allOpponents] = await Promise.all([
+  const [builds, programs, allOpponents, history] = await Promise.all([
     db.select().from(tankBuilds).where(eq(tankBuilds.pilotProfileId, profile.id)),
     db.select().from(pilotCodePrograms).where(eq(pilotCodePrograms.pilotProfileId, profile.id)),
     db.select().from(opponents).where(lte(opponents.rankTier, profile.rank)),
+    db.select().from(battles).where(eq(battles.pilotProfileId, profile.id)),
   ]);
 
   const available = allOpponents.filter((o) => o.kind === "challenger" || o.rankTier === profile.rank);
@@ -26,6 +28,9 @@ export default async function BattlesPage() {
       ) : (
         <BattleSubmitForm builds={builds} programs={programs} opponents={available} />
       )}
+      <div className="mt-6">
+        <BattleHistory battles={history} />
+      </div>
     </div>
   );
 }

@@ -166,15 +166,15 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 ### Tests for User Story 4
 
-- [ ] T062 [P] [US4] Integration test: `GET /api/battles/:id/log` is only available once `status = complete` in `tests/integration/replay-log.test.ts`
+- [X] T062 [P] [US4] Integration test: `GET /api/battles/:id/log` is only available once `status = complete` in `tests/integration/replay-log.test.ts` — split into two deterministic tests (a directly-inserted `queued` row for the 409 case, a real completed battle for the 200 case) rather than racing a real battle's now-sub-second simulation time
 
 ### Implementation for User Story 4
 
-- [ ] T063 [US4] Implement `GET /api/battles/:id/log` route handler in `src/app/api/battles/[id]/log/route.ts`
-- [ ] T064 [US4] Extend `GET /api/battles` to serve the player's full battle history in `src/app/api/battles/route.ts`
-- [ ] T065 [US4] Build the Replay Viewer page (`src/app/replay/[battleId]/page.tsx`) per the Replay Viewer wireframe — play/pause/scrub, tank state at tick, `pilot`/`system`-tagged log messages
-- [ ] T066 [US4] Build the Battles page's history tab (list past battles, link into replay) in `src/app/battles/page.tsx`
-- [ ] T067 [US4] Wire replay scrubbing to tick-log playback end-to-end
+- [X] T063 [US4] Implement `GET /api/battles/:id/log` route handler in `src/app/api/battles/[id]/log/route.ts` — found and fixed a real ordering bug: the worker was flipping status to `complete` *before* inserting the log row, so a client polling status could briefly see `complete` with no log to fetch yet (404). Log is now written first.
+- [X] T064 [US4] Extend `GET /api/battles` to serve the player's full battle history in `src/app/api/battles/route.ts`
+- [X] T065 [US4] Build the Replay Viewer page (`src/app/replay/[battleId]/page.tsx`) per the Replay Viewer wireframe — play/pause/scrub, tank state at tick, `pilot`/`system`-tagged log messages
+- [X] T066 [US4] Build the Battles page's history tab (list past battles, link into replay) in `src/app/battles/page.tsx` — `src/components/battles/BattleHistory.tsx`
+- [X] T067 [US4] Wire replay scrubbing to tick-log playback end-to-end — verified with a Playwright smoke run (submit → resolve → open replay → scrub via slider → play/pause actually advances ticks)
 
 **Checkpoint**: Full spec.md vertical slice functional for rank 1 (all four user stories).
 

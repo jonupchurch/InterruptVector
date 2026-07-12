@@ -61,12 +61,18 @@ export async function runQueuedBattle(battleId: number): Promise<void> {
       seed: battle.seed,
     });
 
+    // Log written *before* the battle flips to "complete" -- a client
+    // polling status is allowed to assume the log already exists the
+    // instant it observes "complete" (this ordering is what
+    // GET /api/battles/:id/log's 409-until-complete contract
+    // actually promises; doing it the other way around was a real
+    // race caught by a flaky-looking test failure, not a hypothetical).
+    await db.insert(battleLogs).values({ battleId, tickLog: result.tickLog });
+
     await db
       .update(battles)
       .set({ status: "complete", outcome: result.outcome, finalTick: result.finalTick, simulatedAt: new Date() })
       .where(eq(battles.id, battleId));
-
-    await db.insert(battleLogs).values({ battleId, tickLog: result.tickLog });
 
     await maybeAdvanceRank(battle.pilotProfileId, result.outcome, { kind: opponent.kind, rankTier: opponent.rankTier });
   } catch (err) {
