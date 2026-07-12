@@ -54,6 +54,7 @@ export function ReplayViewer({
         <div className="flex flex-col gap-3">
           <input
             type="range"
+            aria-label="Replay tick scrubber"
             min={0}
             max={tickLog.length - 1}
             value={index}

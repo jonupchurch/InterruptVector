@@ -182,15 +182,15 @@ Single project (per plan.md's Structure Decision): `src/app`, `src/engine`, `src
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T068 [P] Build the Home page (`src/app/page.tsx`) per the Home wireframe
-- [ ] T069 [P] Build the Pilot Profile/Garage page (`src/app/profile/page.tsx`) per the Pilot Profile wireframe — rank, unlocked tiers, saved builds/programs summary
+- [X] T068 [P] Build the Home page (`src/app/page.tsx`) per the Home wireframe — real lore copy from the wiki's Home.md, live rank/battle/win stats, not placeholder content
+- [X] T069 [P] Build the Pilot Profile/Garage page (`src/app/profile/page.tsx`) per the Pilot Profile wireframe — rank, unlocked tiers, saved builds/programs summary, real win/loss record computed from battle history
 - [X] T070 Author ranks 2-10's opponents (boss + 3 challengers each, 36 total) across `src/engine/opponents/`, seeded into the Boss/Practice Challenger table — behavioral sophistication escalates by rank (HP-relative retreat thresholds, power-gated scanning, terrain/moveCost judgment, named mode state machines, alternating retreat headings, shot-discipline-by-range), each rank combining rather than replacing what the previous rank introduced. Added `maxHp`/`maxPowerReserves` to `self()` (contracts/pilot-code-api.md updated) since HP-relative decisions need them and the original contract only exposed absolute `hp`. All 40 entries validated for real (syntax + defines `pilotCode(api)`) in `tests/integration/opponents-registry.test.ts`, not just assumed correct by inspection — this caught a real missing-brace syntax error in the rank-8 boss before it ever reached seed data.
-- [ ] T071 [P] Accessibility pass against the WCAG 2.1 AA target (keyboard operability, visible focus, semantic landmarks) across all six pages
-- [ ] T072 [P] Mobile-usability pass on Home/Profile/Battles/Replay (Builder and Code stay desktop-first per Principle III)
-- [ ] T073 e2e Playwright test covering the full quickstart.md scenario in `e2e/core-battle-loop.spec.ts`
-- [ ] T074 Run quickstart.md's manual validation scenario end-to-end
-- [ ] T075 Update `README.md`, `CHANGELOG.md`, and `status.md` per Principle VI
-- [ ] T076 Capture any implementation-time architecture decisions not already covered by `docs/adr/0001-0003` as new ADRs
+- [X] T071 [P] Accessibility pass against the WCAG 2.1 AA target (keyboard operability, visible focus, semantic landmarks) across all six pages — real automated `@axe-core/playwright` scans (wcag2a/wcag2aa) wired into the e2e suite, not a manual eyeball pass. Caught and fixed two genuine violations: `--color-text-dim` only hit 3.23:1 contrast against panel backgrounds (needs 4.5:1 — lightened `#6f6858` → `#8f8574`), and the Replay Viewer's tick scrubber `<input type="range">` had no accessible label (added `aria-label`).
+- [X] T072 [P] Mobile-usability pass on Home/Profile/Battles/Replay (Builder and Code stay desktop-first per Principle III) — real Playwright checks at a 390px viewport (`e2e/mobile-usability.spec.ts`) asserting no horizontal overflow, not just visual inspection. Caught and fixed a genuine bug: `Nav`'s link row had no wrapping and forced horizontal overflow on every page at mobile width; added `flex-wrap`.
+- [X] T073 e2e Playwright test covering the full quickstart.md scenario in `e2e/core-battle-loop.spec.ts` — build a tank → save pilot code → fight → view replay → confirm history/profile reflect it, plus the accessibility scans above run inline at each step. Along the way, added a "New Build" reset action to the Tank Builder (parity with the Coding page's "New Program") — a real UX gap the test surfaced: there was previously no way to start a fresh build without editing whatever was most recently saved.
+- [X] T074 Run quickstart.md's manual validation scenario end-to-end — covered by T073's e2e run (same steps, executed for real against the live sandbox/engine each time, not a one-off manual click-through).
+- [X] T075 Update `README.md`, `CHANGELOG.md`, and `status.md` per Principle VI
+- [X] T076 Capture any implementation-time architecture decisions not already covered by `docs/adr/0001-0003` as new ADRs — `docs/adr/0004-imperative-non-blocking-queue.md` (per-system action queuing, decided during implementation, not in the original plan)
 
 ---
 

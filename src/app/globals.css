@@ -16,7 +16,11 @@
 
   --color-text: #ece4d3;
   --color-text-mid: #a69c8c;
-  --color-text-dim: #6f6858;
+  /* Lightened from the wireframe's #6f6858 -- that value only hit a
+     3.23:1 contrast ratio against --color-panel, short of WCAG AA's
+     4.5:1 for normal text (Principle III), caught by an automated
+     axe scan rather than assumed fine by eye. #8f8574 clears ~5:1. */
+  --color-text-dim: #8f8574;
 
   --color-cyan: #35e9e1;
   --color-green: #4df08a;

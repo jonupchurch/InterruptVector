@@ -19,16 +19,20 @@ export interface SavedBuild {
   powerTier: number;
 }
 
-export function BuilderForm({ rank, initialBuild }: { rank: number; initialBuild: SavedBuild | null }) {
-  const unlocked = unlockedTiersForRank(rank);
+const DEFAULTS = { chassisTier: 1, weaponTier: 1, sensorTier: 1, mobilityTier: 1, powerTier: 1 };
 
-  const [name, setName] = useState(initialBuild?.name ?? "");
-  const [chassisTier, setChassisTier] = useState(initialBuild?.chassisTier ?? 1);
-  const [weaponTier, setWeaponTier] = useState(initialBuild?.weaponTier ?? 1);
-  const [sensorTier, setSensorTier] = useState(initialBuild?.sensorTier ?? 1);
-  const [mobilityTier, setMobilityTier] = useState(initialBuild?.mobilityTier ?? 1);
-  const [powerTier, setPowerTier] = useState(initialBuild?.powerTier ?? 1);
-  const [savedId, setSavedId] = useState<number | null>(initialBuild?.id ?? null);
+export function BuilderForm({ rank, builds: initialBuilds }: { rank: number; builds: SavedBuild[] }) {
+  const unlocked = unlockedTiersForRank(rank);
+  const mostRecent = initialBuilds[0] ?? null;
+
+  const [builds, setBuilds] = useState(initialBuilds);
+  const [name, setName] = useState(mostRecent?.name ?? "");
+  const [chassisTier, setChassisTier] = useState(mostRecent?.chassisTier ?? DEFAULTS.chassisTier);
+  const [weaponTier, setWeaponTier] = useState(mostRecent?.weaponTier ?? DEFAULTS.weaponTier);
+  const [sensorTier, setSensorTier] = useState(mostRecent?.sensorTier ?? DEFAULTS.sensorTier);
+  const [mobilityTier, setMobilityTier] = useState(mostRecent?.mobilityTier ?? DEFAULTS.mobilityTier);
+  const [powerTier, setPowerTier] = useState(mostRecent?.powerTier ?? DEFAULTS.powerTier);
+  const [savedId, setSavedId] = useState<number | null>(mostRecent?.id ?? null);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -39,6 +43,30 @@ export function BuilderForm({ rank, initialBuild }: { rank: number; initialBuild
   const weightCheck = useMemo(() => validateWeightCapacity(selection), [selection]);
   const stats = useMemo(() => derivedStats(selection), [selection]);
   const buildValid = weightCheck.valid && name.trim().length > 0;
+
+  function selectBuild(build: SavedBuild) {
+    setSavedId(build.id);
+    setName(build.name);
+    setChassisTier(build.chassisTier);
+    setWeaponTier(build.weaponTier);
+    setSensorTier(build.sensorTier);
+    setMobilityTier(build.mobilityTier);
+    setPowerTier(build.powerTier);
+    setSaveState("idle");
+    setErrors([]);
+  }
+
+  function newBuild() {
+    setSavedId(null);
+    setName("");
+    setChassisTier(DEFAULTS.chassisTier);
+    setWeaponTier(DEFAULTS.weaponTier);
+    setSensorTier(DEFAULTS.sensorTier);
+    setMobilityTier(DEFAULTS.mobilityTier);
+    setPowerTier(DEFAULTS.powerTier);
+    setSaveState("idle");
+    setErrors([]);
+  }
 
   async function handleSave() {
     setSaveState("saving");
@@ -55,13 +83,38 @@ export function BuilderForm({ rank, initialBuild }: { rank: number; initialBuild
       setSaveState("error");
       return;
     }
-    const saved = await res.json();
+    const saved: SavedBuild = await res.json();
+    setBuilds((prev) => {
+      const exists = prev.some((b) => b.id === saved.id);
+      return exists ? prev.map((b) => (b.id === saved.id ? saved : b)) : [saved, ...prev];
+    });
     setSavedId(saved.id);
     setSaveState("saved");
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
+    <div className="grid gap-4 md:grid-cols-[1fr_2fr_1fr]">
+      <Panel title="Builds">
+        <div className="flex flex-col gap-2">
+          <Button signal="cyan" onClick={newBuild} className="mb-2">
+            + New Build
+          </Button>
+          {builds.map((build) => (
+            <button
+              key={build.id}
+              type="button"
+              onClick={() => selectBuild(build)}
+              className={[
+                "rounded-[3px] border px-3 py-2 text-left font-mono text-xs transition-colors",
+                build.id === savedId ? "border-cyan bg-cyan/10 text-cyan" : "border-line text-text-mid hover:border-text-mid",
+              ].join(" ")}
+            >
+              {build.name}
+            </button>
+          ))}
+        </div>
+      </Panel>
+
       <div className="flex flex-col gap-4">
         <Panel title="Outfitting">
           <label className="flex flex-col gap-1">
